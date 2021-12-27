@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_lang::solana_program;
 use std::convert::Into;
 
-declare_id!("2xHZtYYRzAZZfbfjzJ86UP1Go9qLRwgAZMgVJ7vEqLLM");
+declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[error]
 pub enum ErrorCode {
@@ -221,7 +221,7 @@ pub mod multisig {
 
     #[derive(Accounts)]
     pub struct Approve<'info> {
-        owner: Signer<'info>,
+        signer: Signer<'info>,
         multisig: Account<'info, Multisig>,
         #[account(mut, has_one = multisig)]
         transaction: Account<'info, Transaction>,
@@ -233,7 +233,7 @@ pub mod multisig {
             .multisig
             .owners
             .iter()
-            .position(|a| a == ctx.accounts.owner.key)
+            .position(|a| a == ctx.accounts.signer.key)
             .ok_or(ErrorCode::InvalidOwner)?;
         require!(
             ctx.accounts.multisig.owners_seq_no == ctx.accounts.transaction.owners_seq_no,
